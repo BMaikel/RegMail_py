@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!---CSS Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    
+    <title>Gestion de E-mails - UNALM</title>
+    
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="mt-4 border-bottom border-secondary">
+                <h1 class="text-center">AGENDA - UNALM</h1>
+                <p class="text-center text-muted">Guardar y enviar e-mails</p>
+            </div>
+        </div>
+    </section>
+    <section class="pb-4">
+        <div class="container">
+            <div class="row">
+                
+                <!--Primera columna-->
+                <div class="col-sm-6 col-md-5">
+                    <div class="bg-success py-1 my-3">
+                        <h3 class="fs-6 text-white text-center">INICIO DE SESIÓN</32>
+                    </div>
+
+                    <div>
+                        <form action="/enviar_mensaje" method="POST" enctype="multipart/form-data">
+                            <div class="d-flex d-flex align-items-stretch border-bottom border-success pb-4">
+                                <div class="flex-fill">
+                                    <input type="email" class="form-control form-control-sm" id="InputEmail" placeholder="Correo Insitucional" name="correo_remitente">
+                                </div>
+
+                                <div class="flex-fill">
+                                    <input type="password" class="form-control form-control-sm" id="inputPassword" placeholder="Contraseña"  name="password">
+                                </div>
+                            </div>
+                        
+                            <div class="mt-3">
+                                <h3 class="fs-6">ENVIAR CORREO:</32>
+                            </div>
+
+                            <div>
+                                <div class="mb-3">
+                                    <input type="email" class="form-control form-control-sm" placeholder="Para:" name="correo_destinatario">
+                                </div>
+                                <div class="mb-3">
+                                    <input type = "text" class="form-control form-control-sm" placeholder="Asunto:" name="asunto">
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control form-control-sm" id="exampleFormControlTextarea1" rows="8" placeholder="Contenido" style="overflow:auto;resize:none" name="contenido_mensaje"></textarea>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <input type="file" multiple class="form-control" aria-label="file example" name = "arhivos_mail">
+                            </div>
+                            <div class="d-flex flex-row mb-3">
+                                <div>
+                                    <button type="submit" class="btn btn-success p-2">Enviar</button>
+                                </div>
+                                <div>
+                                    <p class="ms-3 text-muted fs-6">Recuerda que debes tener activada el acceso a aplicaciones externas en tu cuenta de google :)
+                                        <a target="_blank" href="https://myaccount.google.com/u/1/lesssecureapps?pli=1&rapt=AEjHL4N4v09WniRFC1WJ3punLTHXpMS2iHHROd9iLyXQ0Lfxr-65mPMG9QhjcODtl6YNTQ6HKgcrjCdXofk7IVnR-ekIPLTlUA">Actívalo aqui</a>
+                                    </p>
+                                </div>
+                                
+                            </div>
+                            
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+
+                <!--Segunda columna-->
+                <div class="col-6 col-md-7">
+
+                    <div class="py-1 my-3 bg-primary">
+                        <h3 class="fs-6 text-white text-center">REGISTROS</h3>
+                    </div>
+                    <div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">E-mail</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Curso</th>
+                                    <th scope="col">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                    <tr>
+                                        <td>{{ i.1 }}</td>
+                                        <td>{{ i.2 }}</td>
+                                        <td>{{ i.3 }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_editar_{{i.0}}">Editar</button>
+                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#Modal_eliminar_{{i.0}}">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Modal1">Añadir</button>
+  
+                     <!-- Modal AGREGAR-->
+                    <div class="modal fade" id="Modal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">AÑADIR NUEVO CORREO</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+
+                                <form action = "/registrar_correo" method = "POST">
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <input type="email" class="form-control form-control-sm" placeholder="Nuevo correo" name="email-registrar">
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type = "text" class="form-control form-control-sm" placeholder="Nombre" name="nombre-registrar">
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type = "text" class="form-control form-control-sm" placeholder="Curso" name="curso-registrar">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Guardar correo</button>
+                                    </div>
+                                </form>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                {% for i in data %}
+                    <!-- Modal_EDITAR -->
+                    <div class="modal fade" id="Modal_editar_{{i.0}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">EDITAR CORREO</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+
+                                    <form action = "/editar_correo/{{i.0}}" method = "POST">
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <input type="email" class="form-control form-control-sm" placeholder="Nuevo correo" name="email-update" value="{{i.1}}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <input type = "text" class="form-control form-control-sm" placeholder="Nombre" name="nombre-update" value="{{i.2}}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <input type = "text" class="form-control form-control-sm" placeholder="Curso" name="curso-update" value="{{i.3}}">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-warning" data-bs-dismiss="modal">Editar correo</button>
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal_ELIMINAR -->
+                    <div class="modal fade" id="Modal_eliminar_{{i.0}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">ELIMINAR CORREO</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h6>¿Seguro que desea eliminar?</h6>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <a href="/eliminar/{{i.0}}" class="btn btn-danger" role="button">Eliminar correo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center pt-2 mt-2 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+                <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                    <h5>20210824</h5>
+                </a>
+                <div class="mb-3 mb-md-0 text-muted"><h6>© 2022 Company, Inc</h6></div>
+            </div>
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <li target="_blank" class="ms-3"><a class="text-muted" href="https://github.com/MGato24"><img src="https://cdn-icons-png.flaticon.com/512/733/733609.png" alt="" width="24"></a></li>
+                <li target="_blank" class="ms-3"><a class="text-muted" href="https://www.facebook.com/maicol.gat0"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="" width="24"></a></li>
+                <li target="_blank" class="ms-3"><a class="text-muted" href="https://twitter.com/MaicolAlexis_"><img src="https://cdn-icons-png.flaticon.com/512/4494/4494477.png" alt="" width="24"></a></li>
+            </ul>
+        </footer>
+    </div>
+    <!---JS Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+</html>
