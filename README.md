@@ -1,2 +1,3 @@
 # RegMail_py
- Sistema de registro de correos electrónicos y envío de mensajes en python con Flask
+Sistema de registro de correos electrónicos y envío de mensajes en python con Flask
+Práctica de consultas SQL. 
